@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ATIF-MART</title>
+ 
+<style type="text/css" media="all"> 
+ 
+ 
+/*body {}*/
+ 
+table {
+color:white;
+width: 800px;
+margin-left: auto;
+margin-right: auto;
+font-size: 10pt;
+font-family: Arial,helvetica,sans-serif;
+background-color: green; }
+ 
+td#header {
+font-size: 16pt;
+text-align: center; }
+ 
+
+td, th {
+padding: 3px; }
+
+ 
+
+ 
+h1 {
+width: 775px;
+height: 125px;
+font-size: 40pt;
+font-family: Optima,sans-serif;
+padding: 15 15 0 40;
+text-align: center;
+margin-bottom: 0; }
+ 
+.center {
+text-align: center; }
+ 
+tr#green {
+color: white;
+background-color: Green;
+font-weight: bold;
+text-align: center; }
+ 
+tr#nav {
+color: black;
+font-weight: bold;
+text-align: center; }
+ 
+tr#header {
+color: black;
+background-color: white;
+font-weight: bold;
+text-align: center; }
+ 
+td#body {
+color: black;
+background-color: white;
+text-align: justify; }
+ 
+button {
+margin-left: 16px; }
+ 
+</style>
+ 
+<script type="text/javascript"> 
+
+var basketTotal = 0;
+var empty = 0;
+var butterTotal = 0;
+var milkTotal = 0;
+var breadTotal = 0;
+
+var butterTally = 0;
+var breadTally = 0;
+
+function addButterToBasket() {
+var cartTable = document.getElementById("cart");
+  var price = 0.80;
+  var rowI = 0;
+
+    // find row that contains Butter
+    for (var i = 0; i < cartTable.rows.length; i++) { 
+    if(cartTable.rows[i].cells[0].innerHTML === "Butter 500mg")
+    {
+     rowI = document.getElementById("cart").rows[i].rowIndex;
+    }
+    }//end of loop
+   
+    
+    
+    var uc = cartTable.rows[rowI].cells;
+  
+   if(document.getElementById("quantityButter").value !== "Quantity")
+   { 
+     
+    //check and find basket for item to update then update
+    //quantity and item total and basket total
+    if(uc[0].innerHTML === "Butter 500mg")
+    {
+    
+    var uq = document.getElementById("quantityButter").value;
+    uc[2].innerHTML = parseInt(uc[2].innerHTML,10) + parseInt(uq,10);
+
+    butterTally = parseInt(uc[2].innerHTML,10); //keep tally of butter quantity
+     //for discount of bread
+
+    var ut = price*parseInt(uc[2].innerHTML,10);
+    uc[3].innerHTML = '&pound' + ut.toFixed(2);
+    
+       
+     butterTotal = ut;
+    }
+
+    else //add new item to shopping cart
+    {
+   
+    //add name of Product Item
+    var row = cartTable.insertRow(1);
+    var p = row.insertCell(0);
+    p.innerHTML = "Butter 500mg";  
+
+    //add price of Product item per unit
+    var ppu = row.insertCell(1);   
+    ppu.innerHTML = '&pound' + price.toFixed(2);
+
+    //add quantity selected of Product item
+    var qs = row.insertCell(2);
+    qs.innerHTML = document.getElementById("quantityButter").value;
+
+    butterTally = qs.innerHTML; //keep tally of butter quantity
+     //for discount of bread
+
+    //Compute and add total value of Product item
+    var tv = row.insertCell(3);
+    var total = price*qs.innerHTML;
+    tv.innerHTML = '&pound' + total.toFixed(2);
+    
+    butterTotal = total;
+    
+    }
+    
+    //update Basket Total
+    basketTotal = butterTotal + milkTotal + breadTotal;
+    var bt = document.getElementById("baskettotal");
+
+    bt.innerHTML = '&pound' + basketTotal.toFixed(2);
+  }
+  else {alert("Please Select a Quantity Number Then Add to Basket");}
+}
+
+function addMilkToBasket() {
+  var cartTable = document.getElementById("cart");
+  var rowI = 0;
+  var price = 1.15;
+
+    // find row that contains milk
+    for (var i = 0; i < cartTable.rows.length; i++) { 
+    if(cartTable.rows[i].cells[0].innerHTML === "Milk 6 pints (Whole)")
+    {
+     rowI = document.getElementById("cart").rows[i].rowIndex;
+    }
+    }//end of loop
+   
+    
+    var uc = cartTable.rows[rowI].cells;
+
+
+
+   if(document.getElementById("quantityMilk").value !== "Quantity")
+   {
+     
+     //check and find basket for item to update then update
+     //quantity and item total and basket total
+     if(uc[0].innerHTML === "Milk 6 pints (Whole)")
+    {
+    
+    var uq = document.getElementById("quantityMilk").value;
+    uc[2].innerHTML = parseInt(uc[2].innerHTML,10) + parseInt(uq,10);
+
+    var ut = buyThreeGetOneFree(price,uc[2].innerHTML);
+    uc[3].innerHTML = '&pound' + ut.toFixed(2);
+
+    milkTotal = ut;   
+
+    }
+    else //add new item to shopping cart
+    {
+    
+    //add name of Product Item
+    var row = cartTable.insertRow(1);
+    var p = row.insertCell(0);
+    p.innerHTML = "Milk 6 pints (Whole)";
+
+    //add price of Product item per unit
+    var ppu = row.insertCell(1);
+    ppu.innerHTML = '&pound' + price.toFixed(2);
+
+    //add quantity selected of Product item
+    var qs = row.insertCell(2);
+    qs.innerHTML = document.getElementById("quantityMilk").value;
+
+
+    //Compute and add total value of Product item
+    var tv = row.insertCell(3);
+
+    var total = buyThreeGetOneFree(price,qs.innerHTML);
+    tv.innerHTML = '&pound' + total.toFixed(2);
+
+     milkTotal = total;
+    }
+    
+    //update Basket Total
+    basketTotal = butterTotal + milkTotal + breadTotal;
+    var bt = document.getElementById("baskettotal");
+    bt.innerHTML = '&pound' + basketTotal.toFixed(2);
+
+   } 
+   else {alert("Please Select a Quantity Number Then Add to Basket");}  
+}
+
+function addBreadToBasket() {
+  var cartTable = document.getElementById("cart");
+  var price = 1.00;
+  var rowI = 0;  
+    
+    // find row that contains Bread
+    for (var i = 0; i < cartTable.rows.length; i++) { 
+    if(cartTable.rows[i].cells[0].innerHTML === "Bread (Medium White)")
+    {
+     rowI = document.getElementById("cart").rows[i].rowIndex;
+    }
+    }//end of loop    
+
+    var uc = cartTable.rows[rowI].cells;
+
+     
+    if(document.getElementById("quantityBread").value !== "Quantity")
+   {
+     //check and find basket for item to update then update
+     //quantity and item total and basket total
+     if(uc[0].innerHTML === "Bread (Medium White)")
+    {
+    
+    var uq = document.getElementById("quantityBread").value;
+    uc[2].innerHTML = parseInt(uc[2].innerHTML,10) + parseInt(uq,10);
+    
+    breadTally = parseInt(uc[2].innerHTML,10); //breadTally holds quantity
+   // of bread for discount
+
+    var ut = buyTwoGetOneHalfP(price, breadTally, butterTally);
+    uc[3].innerHTML = '&pound' + ut.toFixed(2);
+
+    breadTotal = ut;   
+
+    }
+    else //add new item to shopping cart
+    {
+    
+    //add name of Product Item
+    var row = cartTable.insertRow(1);
+    var p = row.insertCell(0);
+    p.innerHTML = "Bread (Medium White)";
+
+    //add price of Product item per unit
+    var ppu = row.insertCell(1);
+    ppu.innerHTML = '&pound' + price.toFixed(2);
+ 
+    //add quantity selected of Product item
+    var qs = row.insertCell(2);
+    qs.innerHTML = document.getElementById("quantityBread").value;
+
+    breadTally = qs.innerHTML; //breadTally holds quantity
+    // of bread for discount
+
+    //Compute and add total value of Product item
+    var tv = row.insertCell(3);
+    var total = buyTwoGetOneHalfP(price, breadTally, butterTally);
+    tv.innerHTML = '&pound' + total.toFixed(2);
+     
+    breadTotal = total;
+
+    }
+    
+    //update Basket Total
+    basketTotal = butterTotal + milkTotal + breadTotal;
+    var bt = document.getElementById("baskettotal");
+    bt.innerHTML = '&pound' + basketTotal.toFixed(2);
+
+
+   } 
+   else {alert("Please Select a Quantity Number Then Add to Basket");}  
+}
+
+
+//Clears the basket and resets all global variables in relation to customer basket.
+function clearBasket() {
+
+var i;
+ for (i = 1; i < document.getElementById("cart").rows.length -1; i++) 
+ {
+    //check number of all rows in table and delete all item rows depending on
+    //how many items there are.
+    if(document.getElementById("cart").rows.length == 3)
+    {
+     document.getElementById("cart").deleteRow(i);
+    }
+    else if(document.getElementById("cart").rows.length == 4){
+     document.getElementById("cart").deleteRow(i);  
+     document.getElementById("cart").deleteRow(i); 
+    }
+    else if(document.getElementById("cart").rows.length == 5){
+     document.getElementById("cart").deleteRow(i);  
+     document.getElementById("cart").deleteRow(i); 
+     document.getElementById("cart").deleteRow(i);
+    }
+
+    var bt = document.getElementById("baskettotal"); 
+    basketTotal = 0;
+    butterTotal = 0;
+    milkTotal = 0;
+    breadTotal = 0;
+    butterTally = 0;
+    breadTally = 0;
+    bt.innerHTML = '&pound' + empty.toFixed(2);
+ }
+   
+}
+
+//Checks if basket total is empty :
+//if it is then it allows a purchase to go through
+//if not then it requests the user to add items to basket before purchasing items
+function purchaseItems() {
+  var e = 0; 
+  var emptyTotal = '&pound' + e.toFixed(2);
+  var bt = document.getElementById("baskettotal"); 
+
+  if(bt.innerHTML !== "£0.00")
+  {alert("Items Purchased");}
+  else {alert("No Items to Purchase Please add to basket");}
+}
+
+
+//Calculates the offer of buy 3 get one free
+//so in every 4 items 1 item is free
+//pr is price, qu is quantity
+//dq is discount quantity , dt is discount total
+function buyThreeGetOneFree(pr,qu)
+{
+  var dt = 0;
+  if(qu >= 4){
+   var dq = qu/4;
+   dt = pr*(qu-Math.floor(dq));
+   return dt;
+   }
+  else{
+    return dt = pr*qu;
+  }
+}
+
+//Calculates the offer of buy 2 butter get one half price
+//so for 2 butter items you get a bread item at half price
+//pr is price, qu is quantity , butTal is butterTally or butter item quantity
+//dq is discount quantity , dt is discount total , bt is butter tally
+function buyTwoGetOneHalfP(pr,qu, butTal)
+{
+  var dt = 0;
+  var bt = butTal;
+  
+  if (bt % 2 == 0)
+  {
+    var dq = bt/2;
+    dt = (pr/2)*(bt/2);
+    return dt += (pr*qu)-dq;
+  }
+  else
+  {
+     return  dt = pr*qu;
+  }
+ 
+}
+
+
+</script>
+
+</head>
+ 
+<body>
+<div class="center">
+ 
+<table border="0">
+<tr id="header">
+  <td colspan="2"><h1>ATIF-MART</h1></td>
+</tr>
+<tr>
+<td align="right">
+
+</td></tr>
+<tr id="nav">
+ 
+
+ 
+</tr>
+<tr>
+ 
+<td id="cartArea">
+<p><strong style="font-size:15px;"><u>Customer Basket</u></strong></p>
+<table id="cart" border="1" style="width:50%">
+  <th>Product</th>
+    <th>Price Per Unit</th>
+    <th>Quantity</th>
+    <th>Total</th>
+    <tfoot>
+     <tr>
+    <td colspan="2" align="right">Basket Total</td>
+    <td colspan="2" align="right" id="baskettotal">&pound0.00</td>
+    </tr>
+    <tfoot>
+</table>
+
+ <button type="submit" onclick= "clearBasket()">Clear Basket</button>
+ <button type="submit" onclick= "purchaseItems()">Purchase Items</button>
+</td>
+
+<td align="right">
+
+
+
+</b></td></tr>
+ 
+<tr>
+  <td id="body" colspan="2"><br /><p>Welcome to Atif-Mart where you can order your essential grocery goods at reasonable prices.
+
+<h4><u style="font-size:18px;">Special Offers!:</u></h4>
+<ul>
+  <li>Buy 2 Butter and get a Bread at 50% off!</li>
+  <li>Buy 3 Milk and get the 4th milk for free!</li>
+</ul>
+<p><i>(discount automatically applied at basket total)</i></p>
+
+</p>
+ 
+<p><strong style="font-size:18px;"><u>Grocery Items:</u></strong></p>
+ 
+<p><img src="http://www.freelogovectors.net/wp-content/uploads/2013/02/V-icons-Kitchen-20-Butter_256x256-32.png" alt="Butter 500mg" width="75" height="75" /><strong>Butter 500mg :</strong> <strong> &pound0.80</strong></p>
+  <select id="quantityButter" size="1">
+    <option>Quantity</option>
+    <option>1</option>
+    <option>2</option>
+    <option>3</option>
+    <option>4</option>
+    <option>5</option>
+    <option>6</option>
+    <option>7</option>
+    <option>8</option>
+    <option>9</option>
+    <option>10</option>
+  </select>
+  <button type="submit" onclick = "addButterToBasket()">Add to Basket</button>
+ 
+<p><img src="http://res.freestockphotos.biz/pictures/5/5112-illustration-of-a-plastic-gallon-jug-of-milk-pv.png" alt="Milk " width="75" height="75" /><strong>Milk 6 pints (Whole) :</strong> <strong> &pound1.15</strong></p>
+  <select id="quantityMilk" size="1">
+    <option>Quantity</option>
+    <option>1</option>
+    <option>2</option>
+    <option>3</option>
+    <option>4</option>
+    <option>5</option>
+    <option>6</option>
+    <option>7</option>
+    <option>8</option>
+    <option>9</option>
+    <option>10</option>
+  </select>
+  <button type="submit" onclick = "addMilkToBasket()">Add to Basket</button>
+ 
+<p><img src="http://photos.gograph.com/thumbs/CSP/CSP992/k12854648.jpg" alt="Bread (Medium White)" width="75" height="120" /><strong>Bread (Medium White) :</strong> <strong> &pound1.00</strong></p>
+  <select id="quantityBread" size="1">
+    <option>Quantity</option>
+    <option>1</option>
+    <option>2</option>
+    <option>3</option>
+    <option>4</option>
+    <option>5</option>
+    <option>6</option>
+    <option>7</option>
+    <option>8</option>
+    <option>9</option>
+    <option>10</option>
+  </select>
+  <button type="submit" onclick = "addBreadToBasket()" >Add to Basket</button>
+ 
+ 
+<br />
+<br />
+ 
+
+  
+ 
+<tr id="green">
+  <td colspan="2">121 Farnham Road, Slough SL109QQ</td>
+</tr>
+</table>
+</div>
+</body>
